@@ -1,16 +1,17 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render, reverse
 
 DATA = {
     'omlet': {
         'яйца, шт': 2,
         'молоко, л': 0.1,
-        'соль, ч.л.': 0.5,
+        'соль, г': 0.2,
     },
     'pasta': {
-        'макароны, г': 0.3,
-        'сыр, г': 0.05,
+        'макароны, кг': 0.3,
+        'сыр, кг': 0.05,
     },
-    'buter': {
+    'butter': {
         'хлеб, ломтик': 1,
         'колбаса, ломтик': 1,
         'сыр, ломтик': 1,
@@ -28,3 +29,11 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+
+def recipe_view(request, recipe):
+    servings = int(request.GET.get('servings', 1))
+    res = recipe + ':<br>'
+    for k, v in DATA[recipe].items():
+        res += k + '&#9;&#8212;&#9;' + str(v * servings) + '<br>'
+    return HttpResponse(res)
